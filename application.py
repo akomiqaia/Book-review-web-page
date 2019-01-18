@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask, session
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -23,4 +22,5 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
+
     return "Project 1: TODO"
