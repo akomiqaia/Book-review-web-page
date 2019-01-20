@@ -1,7 +1,7 @@
 import os
-import requests
-
-from flask import Flask, session, request
+import json
+from helpers import get_review_count
+from flask import Flask, session, request,render_template,redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -22,12 +22,7 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"GACy0ylLEfy4uReswJrGOw": "KEY", "isbns": "9781632168146"})
-if res.status_code != 200:
-    raise Exception("ERROR: API reqsuet unsuccesful")
-print(res.json())
 
 @app.route("/")
 def index():
-    return "API"
-
+    return "blu"
