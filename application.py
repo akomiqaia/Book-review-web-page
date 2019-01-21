@@ -1,6 +1,8 @@
 import os
 import json
-from helpers import get_review_counts, error_message
+
+from passlib.hash import pbkdf2_sha256
+from helpers import get_review_counts, login_required
 from flask import Flask, session, request,render_template,redirect
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -24,6 +26,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 
 @app.route("/")
+@login_required
 def index():
     return get_review_counts("0743454553")
 
@@ -31,25 +34,43 @@ def index():
 def register():
     if request.method == "POST":
         if not request.form.get("username"):
-            return error_message("please provide username")
+            return render_template("error.html", errMessage="please provide username")
         if not request.form.get("password"):
-            return error_message("please provde password")
+            return render_template("error.html", errMessage="please provde password")
         if request.form.get("password") != request.form.get("password_confirmation"):
-            return error_message("password doesn't match")
-        
+            return render_template("error.html", errMessage="password doesn't match")
+        #  create hash for passwords and store it in database
+        hashedPassword = pbkdf2_sha256.hash(request.form.get("password"))
         db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
-                    { "username": request.form.get("username"), "password": request.form.get("password")})
+                    { "username": request.form.get("username"), "password": hashedPassword})
         db.commit()
         return render_template("index.html")
     else:
-        return render_template("register.html")
-    return render_template("register.html") 
+        return render_template("register.html") 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    # forget any user_id
+    session.clear()
+    if request.method == 'POST':
+        user_name = request.form.get("username")
+        password = request.form.get("password")
+        user = db.execute("SELECT username FROM users WHERE username = :user_name",
+                        {"user_name": user_name}).fetchone()
+        
+        if not user:
+            return render_template("error.html", errMessage="User does not exist")
+        hashedPassword = pbkdf2_sha256.hash(request.form.get("password"))
+
+        if not pbkdf2_sha256.verify(password, hashedPassword):
+            return render_template("error.html", errMessage="Passowrd is incorect")
+
+        return render_template('index.html')
+    else:
+        return render_template("login.html")
 
 @app.route("/logout")
+@login_required
 def logout():
     return render_template("login.html")
 
