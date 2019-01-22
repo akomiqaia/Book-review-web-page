@@ -1,4 +1,4 @@
-#1 Project 1 - Book Review Web page
+#1Project 1 - Book Review Web page
 
 
 **The project is done as an assignment for CS50 course in Web Programming.**
@@ -26,5 +26,5 @@ __Objectives achieved while working on the project:__
     "average_score": 5.0
 }
 ```
-If the requested ISBN number isn’t in the database, the website should returns a 404 error.
+If the requested ISBN number isn’t in the database, the website returns a 404 error.
 
