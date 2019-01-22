@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Book Information
+{% endblock %}
+
+{% block body %}
+<form class="form-group" action="/search" method="POST">
+  <input class="form-control" type="text" name="search" placeholder="Search with book's ISBN number, Author or Title" autofocus>
+  <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
+</form>
+<div class="container p-5">
+</div>
+
+<div>
+  <tr data-href="{{ url_for('bookInfo', isbn = book.isbn) }}">
+    <td><a></a>{{ book.isbn }}</td>
+    <td><a></a>{{ book.title }}</td>
+    <td><a></a>{{ book.author }}</td>
+    <td><a></a>{{ book.year }}</td>
+</tr>
+</div>
+{% endblock %}

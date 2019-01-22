@@ -35,13 +35,22 @@ def index():
 
 @app.route("/search", methods=['POST'])
 def search():
-    # maybe imprve the higjlighting of search. in the result page to dispaly table highlited where it was match.
+    # maybe imprve the highlighting of search. in the result page to dispaly table highlited where it was match.
     searchword = request.form.get("search")
     searchword = "%" + searchword + "%"
     books = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn ILIKE :searchword OR title ILIKE :searchword OR author ILIKE :searchword",
                             {"searchword": searchword}).fetchall()
       
     return render_template("search.html", bookList=books)
+
+@app.route("/book/<isbn>")
+def bookInfo(isbn):
+    book = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn = :isbn",
+                    {"isbn": isbn}).fetchone()
+    if not book:
+        return render_template("error.html", errMessage="No such book")
+    
+    return render_template("bookInfo.html", book=book)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

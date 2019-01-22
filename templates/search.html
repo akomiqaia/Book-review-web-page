@@ -5,12 +5,17 @@
 {% endblock %}
 
 {% block body %}
+<style>
+tr a {
+    display: block;
+}
+</style>
 <form class="form-group" action="/search" method="POST">
   <input class="form-control" type="text" name="search" placeholder="Search book's with ISBN number, Author or Title" autofocus>
   <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
 </form>
 <div class="container p-5">
-  <table class="table table-bordered">
+  <table class="table table-hover">
     <thead>
         <th>ISBN</th>
         <th>Title</th>
@@ -20,13 +25,14 @@
     <tbody>
         {% for book in bookList %}
         <tr>
-            <td>{{ book.isbn }}</td>
-            <td>{{ book.title }}</td>
-            <td>{{ book.author }}</td>
-            <td>{{ book.year }}</td>
+            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.isbn }}</a></td>
+            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.title }}</a></td>
+            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.author }}</a></td>
+            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.year }}</a></td>
         </tr>
         {% endfor %}
-    </tbody>
+    </tbody> 
 </table>
+
 </div>
 {% endblock %}
