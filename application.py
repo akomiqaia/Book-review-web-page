@@ -35,6 +35,7 @@ def index():
 
 @app.route("/search", methods=['POST'])
 def search():
+    # maybe imprve the higjlighting of search. in the result page to dispaly table highlited where it was match.
     searchword = request.form.get("search")
     searchword = "%" + searchword + "%"
     books = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn ILIKE :searchword OR title ILIKE :searchword OR author ILIKE :searchword",
