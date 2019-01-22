@@ -3,7 +3,7 @@ import json
 
 from passlib.hash import pbkdf2_sha256
 from helpers import get_review_counts, login_required, get_averadge_rating
-from flask import Flask, session, request,render_template,redirect, url_for
+from flask import Flask, session, request,render_template,redirect, url_for, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -112,6 +112,26 @@ def bookInfo(isbn):
             return render_template("error.html", errMessage="No such book")
         
         return render_template("bookInfo.html", book=book, reviews=reviews, averadgeRating=averadgeRating, reviewCount=reviewCount)
+@app.route("/api/<isbn>")
+def api(isbn):
+    """ Return details about a single book."""
+
+    # make sure book exists
+    book = db.execute("SELECT title, author, year, isbn FROM books WHERE isbn= :isbn",
+                    {"isbn": isbn}).fetchone()
+    if not book:
+        return jsonify({"error": "Invalid isbn"}), 422
+    # get all the info needed for exporting
+    reviewCount = get_review_counts(isbn)
+    averageRating = get_averadge_rating(isbn)
+    return jsonify({
+        "title": book.title,
+        "author": book.author,
+        "year": book.year,
+        "isbn": book.year,
+        "review_count": reviewCount,
+        "average_score": averageRating
+    })
 
 
 
