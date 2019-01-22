@@ -3,7 +3,7 @@ import json
 
 from passlib.hash import pbkdf2_sha256
 from helpers import get_review_counts, login_required
-from flask import Flask, session, request,render_template,redirect
+from flask import Flask, session, request,render_template,redirect, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -32,26 +32,6 @@ def index():
     # there will be random books displayed as well
     
     return render_template("index.html")
-
-@app.route("/search", methods=['POST'])
-def search():
-    # maybe imprve the highlighting of search. in the result page to dispaly table highlited where it was match.
-    searchword = request.form.get("search")
-    searchword = "%" + searchword + "%"
-    books = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn ILIKE :searchword OR title ILIKE :searchword OR author ILIKE :searchword",
-                            {"searchword": searchword}).fetchall()
-      
-    return render_template("search.html", bookList=books)
-
-@app.route("/book/<isbn>")
-def bookInfo(isbn):
-    book = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn = :isbn",
-                    {"isbn": isbn}).fetchone()
-    if not book:
-        return render_template("error.html", errMessage="No such book")
-    
-    return render_template("bookInfo.html", book=book)
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -70,6 +50,7 @@ def register():
     else:
         return render_template("register.html") 
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     # forget any user_id
@@ -87,9 +68,49 @@ def login():
         if not pbkdf2_sha256.verify(password, hashedPassword):
             return render_template("error.html", errMessage="Passowrd is incorect")
         session["user"] = user
-        return render_template('index.html')
+        return redirect('/')
     else:
         return render_template("login.html")
+
+@app.route("/search", methods=['POST'])
+def search():
+    # maybe imprve the highlighting of search. in the result page to dispaly table highlited where it was match.
+    searchword = request.form.get("search")
+    searchword = "%" + searchword + "%"
+    books = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn ILIKE :searchword OR title ILIKE :searchword OR author ILIKE :searchword",
+                            {"searchword": searchword}).fetchall()
+      
+    return render_template("search.html", bookList=books)
+
+@app.route("/book/<isbn>", methods=["GET", "POST"])
+def bookInfo(isbn):
+    if request.method == "POST":
+        # user = db.execute("SELECT username FROM users WHERE username= :user",
+        #                     {"user": session['user']})
+        user_review = db.execute("SELECT * FROM reviews WHERE author = :username AND book_isbn = :isbn",
+                            {"username": session["user"][0], "isbn": isbn} )
+        userreview = user_review.first()
+        if not userreview:
+            review = request.form.get("review")
+            rating = request.form.get("rating")
+            db.execute("INSERT INTO reviews (review, book_isbn, rating, author) VALUES (:review, :book_isbn, :rating, :author)",
+                        {"review": review, 'book_isbn': isbn, "rating": rating, "author": session["user"][0]})
+            db.commit()
+        else:
+            return render_template("error.html", errMessage="you already submited review for this book")
+        return redirect(url_for("bookInfo", isbn=isbn))
+    else:
+        book = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn = :isbn",
+                        {"isbn": isbn}).fetchone()
+        reviews = db.execute("SELECT review FROM reviews WHERE book_isbn = :isbn",
+                                {"isbn": isbn}).fetchall()
+        averadgeRating = get_review_counts(book.isbn)
+        if not book:
+            return render_template("error.html", errMessage="No such book")
+        
+        return render_template("bookInfo.html", book=book, reviews=reviews, averadgeRating=averadgeRating, isbn=isbn)
+
+
 
 @app.route("/logout")
 def logout():

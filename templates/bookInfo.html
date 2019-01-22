@@ -10,14 +10,29 @@
   <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
 </form>
 <div class="container p-5">
+  <ul>
+    <li>{{  book.isbn  }}</li>
+    <li>{{  book.title  }}</li>
+    <li>{{  book.author  }}</li>
+    <li>{{  book.year  }}</li>
+    <li>{{  averadgeRating  }}</li>
+  </ul>
+  <ul>reviews of the page
+    {% for r in reviews %}
+      <li>{{ r[0] }}</li>
+    {% endfor %}
+  </ul>
 </div>
 
 <div>
-  <tr data-href="{{ url_for('bookInfo', isbn = book.isbn) }}">
-    <td><a></a>{{ book.isbn }}</td>
-    <td><a></a>{{ book.title }}</td>
-    <td><a></a>{{ book.author }}</td>
-    <td><a></a>{{ book.year }}</td>
-</tr>
+  <div>
+    <form action="{{ url_for('bookInfo', isbn = book.isbn) }}" method="POST">
+      <input type="text" name="review" placeholder="Write your own review">
+      <input type="text" name="rating" placeholder="rating">
+
+      <button>Submit a Review</button>
+    </form>
+  </div>
+  
 </div>
 {% endblock %}
