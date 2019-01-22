@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Search for a book
+{% endblock %}
+
+{% block body %}
+<form class="form-group" action="/search" method="POST">
+  <input class="form-control" type="text" name="search" placeholder="Search book's with ISBN number, Author or Title" autofocus>
+  <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
+</form>
+<div class="container p-5">
+  <table class="table table-bordered">
+    <thead>
+        <th>ISBN</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+    </thead>
+    <tbody>
+        {% for book in bookList %}
+        <tr>
+            <td>{{ book.isbn }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.year }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

@@ -5,5 +5,10 @@
 {% endblock %}
 
 {% block body %}
-  <h1>books will be displayed here</h1>
+<form class="form-group" action="/search" method="POST">
+  <input class="form-control" type="text" name="search" placeholder="Search with book's ISBN number, Author or Title" autofocus>
+  <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
+</form>
+<div class="container p-5">
+</div>
 {% endblock %}

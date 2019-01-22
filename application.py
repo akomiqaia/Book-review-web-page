@@ -28,7 +28,19 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 @login_required
 def index():
-    return get_review_counts("0743454553")
+    # when user logs in he has to see saerch tab where he can type
+    # there will be random books displayed as well
+    
+    return render_template("index.html")
+
+@app.route("/search", methods=['POST'])
+def search():
+    searchword = request.form.get("search")
+    searchword = "%" + searchword + "%"
+    books = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn ILIKE :searchword OR title ILIKE :searchword OR author ILIKE :searchword",
+                            {"searchword": searchword}).fetchall()
+      
+    return render_template("search.html", bookList=books)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -64,13 +76,13 @@ def login():
 
         if not pbkdf2_sha256.verify(password, hashedPassword):
             return render_template("error.html", errMessage="Passowrd is incorect")
-
+        session["user"] = user
         return render_template('index.html')
     else:
         return render_template("login.html")
 
 @app.route("/logout")
-@login_required
 def logout():
-    return render_template("login.html")
+    session.clear()
+    return redirect("/")
 
