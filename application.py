@@ -80,7 +80,8 @@ def search():
     searchword = "%" + searchword + "%"
     books = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn ILIKE :searchword OR title ILIKE :searchword OR author ILIKE :searchword",
                             {"searchword": searchword}).fetchall()
-      
+    if not books:
+        return render_template("error.html", errMessage="There is nothing in data-base with this keywords")  
     return render_template("search.html", bookList=books)
 
 @app.route("/book/<isbn>", methods=["GET", "POST"])
