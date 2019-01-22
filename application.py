@@ -2,7 +2,7 @@ import os
 import json
 
 from passlib.hash import pbkdf2_sha256
-from helpers import get_review_counts, login_required
+from helpers import get_review_counts, login_required, get_averadge_rating
 from flask import Flask, session, request,render_template,redirect, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -46,7 +46,7 @@ def register():
         db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
                     { "username": request.form.get("username"), "password": hashedPassword})
         db.commit()
-        return render_template("index.html")
+        return redirect("/")
     else:
         return render_template("register.html") 
 
@@ -73,6 +73,7 @@ def login():
         return render_template("login.html")
 
 @app.route("/search", methods=['POST'])
+@login_required
 def search():
     # maybe imprve the highlighting of search. in the result page to dispaly table highlited where it was match.
     searchword = request.form.get("search")
@@ -83,6 +84,7 @@ def search():
     return render_template("search.html", bookList=books)
 
 @app.route("/book/<isbn>", methods=["GET", "POST"])
+@login_required
 def bookInfo(isbn):
     if request.method == "POST":
         # user = db.execute("SELECT username FROM users WHERE username= :user",
@@ -104,11 +106,12 @@ def bookInfo(isbn):
                         {"isbn": isbn}).fetchone()
         reviews = db.execute("SELECT review FROM reviews WHERE book_isbn = :isbn",
                                 {"isbn": isbn}).fetchall()
-        averadgeRating = get_review_counts(book.isbn)
+        averadgeRating = get_averadge_rating(book.isbn)
+        reviewCount = get_review_counts(book.isbn)
         if not book:
             return render_template("error.html", errMessage="No such book")
         
-        return render_template("bookInfo.html", book=book, reviews=reviews, averadgeRating=averadgeRating, isbn=isbn)
+        return render_template("bookInfo.html", book=book, reviews=reviews, averadgeRating=averadgeRating, reviewCount=reviewCount)
 
 
 
