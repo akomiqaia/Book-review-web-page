@@ -5,7 +5,10 @@
 
 _Project uses Bootstrap to decorate HTML. On the server side web-page uses python with FLask framework and ORM(ObjectRelationalMapper)SQLAlchemy library_
 
-#2 Objectives achieved while working on the project:
+
+__Objectives achieved while working on the project:__
+
+
 - **Basic User Functionality**: Users can login, register and log out.
 - **Import**: The book database was imported by python file called import.py, that puts csv file content into database, that is hosted on Heroku 
 - **Search**: Once a user has logged in, they are taken to a page where they can search for a book. Users are able search with the ISBN number of a book, the title of a book, or the author of a book. After performing the search, the website displays a list of possible matching results, or error message if there were no matches. If the user typed in only part of a title, ISBN, or author name, the search page can find matches for those as well!
