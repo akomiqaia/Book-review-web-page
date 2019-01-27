@@ -5,6 +5,13 @@
 
 _Project uses Bootstrap to decorate HTML. On the server side web-page uses python with FLask framework and ORM(ObjectRelationalMapper)SQLAlchemy library_
 
+**To run project:**
+1. Download or clone git repository https://github.com/akomiqaia/Book-review-web-page.git
+2. From your terminal in the repository folder ```export FLASK_APP=application.py```
+3. Then ```export FLASK_ENV=development```
+4. Then ```export DATABASE_URL="postgres://ftkelgeppoihqs:e426f6a7ee01c64a3473b96af7a4f5ae2d40ff532224f85966cc37b6ba52157e@ec2-54-246-117-62.eu-west-1.compute.amazonaws.com:5432/d497eaccus6eki"``` to set environmental variable equal to the link of my database of books.
+5. Run ```flask run```
+
 
 __Objectives achieved while working on the project:__
 
