@@ -1,4 +1,4 @@
-#1Project 1 - Book Review Web page
+#1 Project 1 - Book Review Web page
 
 
 **The project is done as an assignment for CS50 course in Web Programming.**
