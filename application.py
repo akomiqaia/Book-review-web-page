@@ -63,7 +63,7 @@ def login():
         
         if not user:
             return render_template("error.html", errMessage="User does not exist")
-        hashedPassword = pbkdf2_sha256.hash(request.form.get("password"))
+        hashedPassword = pbkdf2_sha256.hash(password)
 
         if not pbkdf2_sha256.verify(password, hashedPassword):
             return render_template("error.html", errMessage="Passowrd is incorect")
