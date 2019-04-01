@@ -43,13 +43,13 @@ def register():
             return render_template("error.html", errMessage="password doesn't match")
         #  create hash for passwords and store it in database
         hashedPassword = pbkdf2_sha256.hash(request.form.get("password"))
+        print(hashedPassword)
         db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
                     { "username": request.form.get("username"), "password": hashedPassword})
         db.commit()
         return redirect("/")
     else:
         return render_template("register.html") 
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -60,12 +60,12 @@ def login():
         password = request.form.get("password")
         user = db.execute("SELECT username FROM users WHERE username = :user_name",
                         {"user_name": user_name}).fetchone()
-        
+        hashPassword = db.execute("SELECT password from users WHERE username =  :user_name",
+                        {"user_name": user_name}).fetchone()
+        print(hashPassword[0])
         if not user:
             return render_template("error.html", errMessage="User does not exist")
-        hashedPassword = pbkdf2_sha256.hash(password)
-
-        if not pbkdf2_sha256.verify(password, hashedPassword):
+        if not pbkdf2_sha256.verify(password, hashPassword[0]):
             return render_template("error.html", errMessage="Passowrd is incorect")
         session["user"] = user
         return redirect('/')
