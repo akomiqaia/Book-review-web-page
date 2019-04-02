@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/semantic/semantic.min.css">
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <script src="../static/semantic/semantic.min.js"></script>
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
-      <nav class="navbar navbar-expand-md navbar-light bg-light border">
-          <a class="navbar-brand" href="/"><span class="red">BookReiews</span></a>
-          <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
-              <span class="navwsbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbar">
-              {% if session.user %}
-                  <!-- <ul class="navbar-nav mr-auto mt-2">
-                      
-                      <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
-                      <li class="nav-item"><a class="nav-link" href="/yourreviews">Your Reviews</a></li>
-                      <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
-                  </ul> -->
-                  <ul class="navbar-nav ml-auto mt-2">
-                      <li class="navitem"><a class="nav-link" href="#">{{ session["user"][0] }}</a></li>
-                      <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
-                  </ul>
-              {% else %}
-                  <ul class="navbar-nav ml-auto mt-2">
-                      <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
-                      <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
-                  </ul>
-              {% endif %}
-          </div>
-      </nav>
+    <div class="ui stackable menu">
+        <div class="item">
+            <img src=''>LOGO
+        </div>
+        <a class="item" href="/">BookReiews</a>
+        <!-- add section for testimonials -->
+        <a class="item">Testimonials</a>
+        <!-- add section for contact -->
+        <a class="item">Contac Us</a> 
+        <div class="right menu">
+            <a class="item">Help</a>
+            {% if session.user %}
+                <a class="item" href="/">{{ session["user"][0] }}</a>
+                <a class="item" href="/logout">Log Out</a>            
+                          
+            {% endif %}
+        </div>
+    </div>
   
-    <main class="container p-5">
+    <main class="ui container">
+        
+        {% if session.user %}
+        <div>
+
+            <form class="ui fluid huge icon input" action="/search" method="POST">
+                <input type="text" name="search" placeholder="Search with book's ISBN number, Author or Title" autofocus>
+                <i class="inverted circular search link icon"></i>
+            </form>
+        </div>
+        {% endif %}
+        
       {% block body %}
+
       {% endblock %}
     </main>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    
   </body>
 </html>

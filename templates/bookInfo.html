@@ -5,33 +5,53 @@
 {% endblock %}
 
 {% block body %}
-<form class="form-group" action="/search" method="POST">
-  <input class="form-control" type="text" name="search" placeholder="Search with book's ISBN number, Author or Title" autofocus>
-  <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
-</form>
-<div class="row">
-    <div class="col-sm-6">
-      <div class="card text-center text-white bg-info mb-3">
-          <div class="card-header">
-            <h5>{{book.title}} by {{book.author}}</h5>
+<div class="ui divider"></div>
+<div class="ui grid">
+  <div class="eight wide column">
+      <div class="ui items">
+          <div class="item">
+            <div class="image">
+              <img src="https://semantic-ui.com/images/avatar/large/stevie.jpg">
+            </div>
+            <div class="content">
+              <a class="header">{{book.title}}</a>
+              <div class="meta">
+                <span>{{book.author}}</span>
+              </div>
+              <div class="description">
+                <div class="ui divider"></div>
+                  <div class="ui list">
+                      <div class="item">
+                          Book ISBN: {{  book.isbn }}
+                      </div>
+                      <div class="item">
+                          Year of publishin: {{  book.year  }}
+                      </div>
+                      <div class="item">
+                          Averadge Rating: {{  averadgeRating  }}
+                      </div>
+                      <div class="item">
+                          Total review count: {{  reviewCount  }}
+                      </div>
+                    </div>
+              </div>
+              
+            </div>
           </div>
-          <ul class="list-group list-group-flush ">
-              <li class="list-group-item bg-info">Book ISBN: {{  book.isbn }}</li>
-              <li class="list-group-item bg-info">Year of publishin: {{  book.year  }}</li>
-              <li class="list-group-item bg-info">Averadge Rating: {{  averadgeRating  }}</li>
-              <li class="list-group-item bg-info">Total review count: {{  reviewCount  }}</li>
-            </ul>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <form action="{{ url_for('bookInfo', isbn = book.isbn) }}" method="POST">
-          <div class="form-group">
-              <label for="exampleFormControlTextarea1">Your Review Goes Here:</label>
+          
+        </div>
+  </div>
+
+  <div class="eight wide column">
+      <form class="ui form" action="{{ url_for('bookInfo', isbn = book.isbn) }}" method="POST">
+          
+          <div class="field">
+              <label for="exampleFormControlTextarea1">Write Your Review Here:</label>
               <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="review"></textarea>
           </div>
-          <div class="form-group">
-            <label for="exampleFormControlSelect1">Choose your rating</label>
-            <select class="form-control" id="exampleFormControlSelect1" name="rating">
+          <div class="field">
+            <label for="exampleFormControlSelect1">Choose your rating:</label>
+            <select id="exampleFormControlSelect1" name="rating" class="ui fluid dropdown" placeholder="Choose the rating ">
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -39,21 +59,35 @@
               <option>5</option>
             </select>
           </div>
-          <button class="btn btn-primary" type="submit">Submit a Review</button>
+          <button class="fluid ui olive button type="submit">Submit a Review</button>
         </form>
-      </div>
+  </div>
 </div>
 
-  <div class="card">
-      <div class="card-header text-center">
-        Reviews from other users
+<div class="ui segment">
+    <div class="ui comments">
+      {%  for r in reviews  %}
+        <div class="comment">
+          <a class="avatar">
+            <img src="https://semantic-ui.com/images/avatar/small/joe.jpg">
+          </a>
+          <div class="content">
+            <a class="author">{{ r[1] }}</a>
+            <div class="metadata">
+              <div class="date">2 days ago </div>
+              <div class="rating">
+                <i class="star icon"></i>
+                {{ r[2]}}
+              </div>
+            </div>
+            <div class="text">
+                {{  r[0]  }}               
+              </div>
+            </div>
+          </div>
+          {%  endfor  %}
       </div>
-      <ul class="list-group list-group-flush">
-        {%  for r in reviews  %}
-        <li class="list-group-item">{{  r[0]  }}</li>
-       
-        {%  endfor  %}
-      </ul>
-    </div>
+</div>
+  
  
 {% endblock %}

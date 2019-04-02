@@ -5,10 +5,54 @@
 {% endblock%}
 
 {% block body %}
-<form action="/register" method="POST">
-  <input type="text" name="username" placeholder="username"> <br>
-  <input type="password" name="password" placeholder="enter your password"> <br>
-  <input type="password" name="password_confirmation" placeholder="repeat your password"> <br>
-  <button type="submit" class="btn btn-primary">Register</button>
-</form>
+
+<div class="ui container">
+    <div class="ui placeholder segment">
+        <div class="ui two column very relaxed stackable grid">
+
+          <!-- sign up section -->
+
+          <div class="column">
+            <form class="ui form" action="/register" method="post">
+              <div class="required field">
+                <label>Username</label>
+                <div class="ui left icon input">
+                  <input autocomplete="off" autofocus name="username" placeholder="Username" type="text"/>
+                  <i class="user icon"></i>
+                </div>
+              </div>
+              <div class="required field">
+                <label>Password</label>
+                <div class="ui left icon input">
+                  <input name="password" placeholder="Password" type="password">
+                  <i class="lock icon"></i>
+                </div>
+              </div>
+              <div class="required field">
+                  <label>Repeat Password</label>
+                  <div class="ui left icon input">
+                      <input type="password" name="password_confirmation" placeholder="repeat your password">
+                    <i class="lock icon"></i>
+                  </div>
+                </div>
+              <button class="ui fluid teal submit button" type='submit'>Register</button>
+            </form>
+          </div>
+
+          <!-- sign in section -->
+
+          <div class="middle aligned column">
+            <a href="/">
+              <button class="ui fluid blue big button">
+                <i class="signin icon"></i>
+                Sign In
+              </button>
+            </a>
+          </div>
+        </div>
+        <div class="ui vertical divider">
+          Or
+        </div>
+      </div>
+</div>
 {% endblock %}

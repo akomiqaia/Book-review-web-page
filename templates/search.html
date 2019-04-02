@@ -5,34 +5,29 @@
 {% endblock %}
 
 {% block body %}
-<style>
-tr a {
-    display: block;
-}
-</style>
-<form class="form-group" action="/search" method="POST">
-  <input class="form-control" type="text" name="search" placeholder="Search book's with ISBN number, Author or Title" autofocus>
-  <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
-</form>
-<div class="container p-5">
-  <table class="table table-hover">
-    <thead>
-        <th>ISBN</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Year</th>
-    </thead>
-    <tbody>
-        {% for book in bookList %}
-        <tr>
-            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.isbn }}</a></td>
-            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.title }}</a></td>
-            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.author }}</a></td>
-            <td><a href="{{ url_for('bookInfo', isbn = book.isbn) }}">{{ book.year }}</a></td>
-        </tr>
-        {% endfor %}
-    </tbody> 
-</table>
 
+<div class="ui link items">
+  {% for book in bookList %}
+    <a class="item" href="{{ url_for('bookInfo', isbn = book.isbn) }}">
+      <div class="ui tiny image">
+        <img src="https://semantic-ui.com/images/avatar/large/stevie.jpg">
+      </div>
+      <div class="content">
+        <div class="header">{{ book.title }}</div>
+        <div class="extra">
+            Additional Details
+          </div>
+        <div class="description">
+          <p> <b>The Author: </b>{{ book.author }}</p>
+          <p> <b>The ISBN number of the book: </b> {{ book.isbn }}</h2>
+          <p class="right floated"> <b><b>Published in:</b> </b>{{ book.year }}</p>
+        </div>
+   
+      </div>
+    </a>
+    <div class="ui divider"></div>
+  {% endfor %}
 </div>
+
+
 {% endblock %}

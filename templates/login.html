@@ -5,13 +5,47 @@
 {% endblock%}
 
 {% block body %}
-<form action="/login" method="post">
-  <div class="form-group">
-      <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>
-  </div>
-  <div class="form-group">
-      <input class="form-control" name="password" placeholder="Password" type="password"/>
-  </div>
-  <button class="btn btn-primary" type="submit">Log In</button>
-</form>
+
+<div class="ui container">
+    <div class="ui placeholder segment">
+        <div class="ui two column very relaxed stackable grid">
+
+          <!-- sign in section -->
+
+          <div class="column">
+            <form class="ui form" action="/login" method="post">
+              <div class="field">
+                <label>Username</label>
+                <div class="ui left icon input">
+                  <input autocomplete="off" autofocus name="username" placeholder="Username" type="text"/>
+                  <i class="user icon"></i>
+                </div>
+              </div>
+              <div class="field">
+                <label>Password</label>
+                <div class="ui left icon input">
+                  <input name="password" placeholder="Password" type="password">
+                  <i class="lock icon"></i>
+                </div>
+              </div>
+              <button class="ui fluid blue submit button" type='submit'>Login</button>
+            </form>
+          </div>
+
+          <!-- sign up section -->
+
+          <div class="middle aligned column">
+            <a href="/register">
+              <button class="ui fluid teal big button">
+                <i class="signup icon"></i>
+                  Sign Up
+              </button>
+            </a>
+          </div>
+        </div>
+        <div class="ui vertical divider">
+          Or
+        </div>
+      </div>
+</div>
 {% endblock %}

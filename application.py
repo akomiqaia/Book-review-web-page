@@ -1,6 +1,5 @@
 import os
 import json
-
 from passlib.hash import pbkdf2_sha256
 from helpers import get_review_counts, login_required, get_averadge_rating
 from flask import Flask, session, request,render_template,redirect, url_for, jsonify
@@ -30,8 +29,9 @@ db = scoped_session(sessionmaker(bind=engine))
 def index():
     # when user logs in he has to see saerch tab where he can type
     # there will be random books displayed as well
-    
-    return render_template("index.html")
+    items = db.execute("SELECT isbn, title, author, year FROM books LIMIT 9").fetchall()
+    bookDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam"
+    return render_template("index.html", items = items, description = bookDescription)
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -60,12 +60,11 @@ def login():
         password = request.form.get("password")
         user = db.execute("SELECT username FROM users WHERE username = :user_name",
                         {"user_name": user_name}).fetchone()
-        hashPassword = db.execute("SELECT password from users WHERE username =  :user_name",
+        hashedPassword = db.execute("SELECT password from users WHERE username =  :user_name",
                         {"user_name": user_name}).fetchone()
-        print(hashPassword[0])
         if not user:
             return render_template("error.html", errMessage="User does not exist")
-        if not pbkdf2_sha256.verify(password, hashPassword[0]):
+        if not pbkdf2_sha256.verify(password, hashedPassword[0]):
             return render_template("error.html", errMessage="Passowrd is incorect")
         session["user"] = user
         return redirect('/')
@@ -105,7 +104,7 @@ def bookInfo(isbn):
     else:
         book = db.execute("SELECT isbn, title, author, year FROM books WHERE isbn = :isbn",
                         {"isbn": isbn}).fetchone()
-        reviews = db.execute("SELECT review FROM reviews WHERE book_isbn = :isbn",
+        reviews = db.execute("SELECT review, author, rating FROM reviews WHERE book_isbn = :isbn",
                                 {"isbn": isbn}).fetchall()
         averadgeRating = get_averadge_rating(book.isbn)
         reviewCount = get_review_counts(book.isbn)
@@ -116,7 +115,6 @@ def bookInfo(isbn):
 @app.route("/api/<isbn>")
 def api(isbn):
     """ Return details about a single book."""
-
     # make sure book exists
     book = db.execute("SELECT title, author, year, isbn FROM books WHERE isbn= :isbn",
                     {"isbn": isbn}).fetchone()
@@ -133,6 +131,7 @@ def api(isbn):
         "review_count": reviewCount,
         "average_score": averageRating
     })
+
 
 
 

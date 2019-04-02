@@ -5,10 +5,32 @@
 {% endblock %}
 
 {% block body %}
-<form class="form-group" action="/search" method="POST">
-  <input class="form-control" type="text" name="search" placeholder="Search with book's ISBN number, Author or Title" autofocus>
-  <button class="btn btn-secondary form-control" type="submit">SEARCH</button>
-</form>
-<div class="container p-5">
-</div>
+<div class="ui divider"></div>
+<div class="ui centered link stackable cards">
+  {% for item in items %}
+    <div class="card">
+      <div class="image">
+        <img src="https://semantic-ui.com/images/avatar2/large/matthew.png">
+      </div>
+      <div class="content">
+        <div class="header">{{ item[1] }}</div>
+        <div class="meta">
+          <a>{{ item[2] }}</a>
+        </div>
+        <div class="description">
+          {{ description}}        
+        </div>
+      </div>
+      <div class="extra content">
+        <span class="right floated">
+          Published in {{ item[3] }}
+        </span>
+        
+      </div>
+    </div>
+    
+    {% endfor %}
+  </div>
+
+
 {% endblock %}
