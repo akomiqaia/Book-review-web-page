@@ -16,22 +16,25 @@
             <img src=''>LOGO
         </div>
         <a class="item" href="/">BookReiews</a>
-        <!-- add section for testimonials -->
+
+        <!-- add content for testimonials -->
         <a class="item">Testimonials</a>
-        <!-- add section for contact -->
+
+        <!-- add content for contact -->
+
         <a class="item">Contac Us</a> 
         <div class="right menu">
             <a class="item">Help</a>
+            <!-- if user is logged in the right top conrner will display users name and log out button -->
             {% if session.user %}
                 <a class="item" href="/">{{ session["user"][0] }}</a>
-                <a class="item" href="/logout">Log Out</a>            
-                          
+                <a class="item" href="/logout">Log Out</a>              
             {% endif %}
         </div>
     </div>
   
     <main class="ui container">
-        
+        <!-- The search tab has to appear everywhere as long as user is logged in -->
         {% if session.user %}
         <div>
 

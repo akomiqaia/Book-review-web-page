@@ -1,7 +1,9 @@
 import os
 import json
+
 from passlib.hash import pbkdf2_sha256
 from helpers import get_review_counts, login_required, get_averadge_rating
+
 from flask import Flask, session, request,render_template,redirect, url_for, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -18,7 +20,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Set up databaseimport requests
+# Set up database import requests
 
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
@@ -27,13 +29,15 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 @login_required
 def index():
-    # when user logs in he has to see saerch tab where he can type
-    # there will be random books displayed as well
+    # when user logs in the user has to see a saerch tab where he will be abole to look for the specific book
+    # there will be 9 books displayed as well
     items = db.execute("SELECT isbn, title, author, year FROM books LIMIT 9").fetchall()
     bookDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam"
     return render_template("index.html", items = items, description = bookDescription)
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """ If new user registers grab all the data and send it to database """
     if request.method == "POST":
         if not request.form.get("username"):
             return render_template("error.html", errMessage="please provide username")
@@ -49,6 +53,7 @@ def register():
         db.commit()
         return redirect("/")
     else:
+        # if  action method is GET just return register.html that will display form for registartion
         return render_template("register.html") 
 
 @app.route("/login", methods=["GET", "POST"])

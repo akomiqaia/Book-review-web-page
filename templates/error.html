@@ -5,5 +5,12 @@
 {% endblock %}
 
 {% block body %}
-  <h1>{{ errMessage }}</h1>
+<!-- error message tamplate that recives errMessage variable that contains an information about the error -->
+  <div class="ui negative message">
+      <i class="close icon"></i>
+      <div class="header">
+        We're sorry we are unable to process your request:
+      </div>
+      <p>{{errMessage}}
+    </p></div>
 {% endblock %}
